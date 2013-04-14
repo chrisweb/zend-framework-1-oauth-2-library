@@ -20,22 +20,22 @@ Jamendo API OAuth 2
 apache vhost.conf
 
 ```
-&lt;VirtualHost *:80&gt;
+<VirtualHost *:80>
 
     ServerName www.jamendoapioauth2.dev
     DocumentRoot /path/to/examples/JamendoApiOAuth2/public
-    ErrorLog &quot;logs/jamendoapioauth2-error.log&quot;
-    CustomLog &quot;logs/jamendoapioauth2-access.log&quot; combined
-    SetEnv APPLICATION_ENV &quot;development&quot;
+    ErrorLog "logs/jamendoapioauth2-error.log"
+    CustomLog "logs/jamendoapioauth2-access.log" combined
+    SetEnv APPLICATION_ENV "development"
  
-    &lt;Directory /path/to/examples/JamendoApiOAuth2/public&gt;
+    <Directory /path/to/examples/JamendoApiOAuth2/public>
         DirectoryIndex index.php
         AllowOverride All
         Order allow,deny
         Allow from all
-    &lt;/Directory&gt;
+    </Directory>
 	
-&lt;/VirtualHost&gt;
+</VirtualHost>
 ```
 
 3. Update your hosts file:
@@ -71,22 +71,22 @@ Facebook Open Graph API OAuth 2
 apache vhost.conf
 
 ```
-&lt;VirtualHost *:80&gt;
+<VirtualHost *:80>
 
     ServerName www.facebookopengraphoauth2.dev
     DocumentRoot /path/to/examples/FacebookOpenGraphOAuth2/public
-    ErrorLog &quot;logs/facebookopengraphoauth2-error.log&quot;
-    CustomLog &quot;logs/facebookopengraphoauth2-access.log&quot; combined
-    SetEnv APPLICATION_ENV &quot;development&quot;
+    ErrorLog "logs/facebookopengraphoauth2-error.log"
+    CustomLog "logs/facebookopengraphoauth2-access.log" combined
+    SetEnv APPLICATION_ENV "development"
  
-    &lt;Directory /path/to/examples/FacebookOpenGraphOAuth2/public&gt;
+    <Directory /path/to/examples/FacebookOpenGraphOAuth2/public>
         DirectoryIndex index.php
         AllowOverride All
         Order allow,deny
         Allow from all
-    &lt;/Directory&gt;
+    </Directory>
 	
-&lt;/VirtualHost&gt;
+</VirtualHost>
 ```
 
 3. Update your hosts file:
