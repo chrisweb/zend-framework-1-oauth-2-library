@@ -19,22 +19,24 @@ Jamendo API OAuth 2
 
 apache vhost.conf
 
-<VirtualHost *:80>
+```
+&lt;VirtualHost *:80&gt;
 
     ServerName www.jamendoapioauth2.dev
     DocumentRoot /path/to/examples/JamendoApiOAuth2/public
-    ErrorLog "logs/jamendoapioauth2-error.log"
-    CustomLog "logs/jamendoapioauth2-access.log" combined
-    SetEnv APPLICATION_ENV "development"
+    ErrorLog &quot;logs/jamendoapioauth2-error.log&quot;
+    CustomLog &quot;logs/jamendoapioauth2-access.log&quot; combined
+    SetEnv APPLICATION_ENV &quot;development&quot;
  
-    <Directory /path/to/examples/JamendoApiOAuth2/public>
+    &lt;Directory /path/to/examples/JamendoApiOAuth2/public&gt;
         DirectoryIndex index.php
         AllowOverride All
         Order allow,deny
         Allow from all
-    </Directory>
+    &lt;/Directory&gt;
 	
-</VirtualHost>
+&lt;/VirtualHost&gt;
+```
 
 3. Update your hosts file:
 
@@ -42,6 +44,7 @@ apache vhost.conf
 
 4. Create a Jamendi API account, then create a configuration file and add the values:
 
+```
 ; application/configs/jamendo_api.ini
 
 ; to get a jamendo api account visit: https://devportal.jamendo.com/
@@ -56,6 +59,7 @@ oauthDialogUri = /oauth/authorize
 accessTokenUri = /oauth/grant
 stateSecret = a_secret_phrase
 grantType = authorization_code
+```
 
 Facebook Open Graph API OAuth 2
 -------------------------------
@@ -66,22 +70,24 @@ Facebook Open Graph API OAuth 2
 
 apache vhost.conf
 
-<VirtualHost *:80>
+```
+&lt;VirtualHost *:80&gt;
 
     ServerName www.facebookopengraphoauth2.dev
     DocumentRoot /path/to/examples/FacebookOpenGraphOAuth2/public
-    ErrorLog "logs/facebookopengraphoauth2-error.log"
-    CustomLog "logs/facebookopengraphoauth2-access.log" combined
-    SetEnv APPLICATION_ENV "development"
+    ErrorLog &quot;logs/facebookopengraphoauth2-error.log&quot;
+    CustomLog &quot;logs/facebookopengraphoauth2-access.log&quot; combined
+    SetEnv APPLICATION_ENV &quot;development&quot;
  
-    <Directory /path/to/examples/FacebookOpenGraphOAuth2/public>
+    &lt;Directory /path/to/examples/FacebookOpenGraphOAuth2/public&gt;
         DirectoryIndex index.php
         AllowOverride All
         Order allow,deny
         Allow from all
-    </Directory>
+    &lt;/Directory&gt;
 	
-</VirtualHost>
+&lt;/VirtualHost&gt;
+```
 
 3. Update your hosts file:
 
@@ -89,6 +95,7 @@ apache vhost.conf
 
 4. Create a Facebook API account, then create a configuration file and add the values:
 
+```
 ; application/configs/facebook_api.ini
 
 ; facebook api configuration
@@ -100,3 +107,4 @@ callbackUrl = http://www.facebookopengraphoauth2.dev/facebookcallback
 oauthDialogUri = /dialog/oauth
 accessTokenUri = /oauth/access_token
 stateSecret = a_secret_phrase
+```
