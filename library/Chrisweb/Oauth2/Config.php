@@ -1,39 +1,34 @@
 <?php
+
 /**
- * Zend Framework
+ * Chrisweb OAuth 2 for Zend Framework 1
  *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
  *
- * @category   Zend
- * @package    Zend_Oauth2
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Config.php 20232 2010-01-12 17:56:33Z matthew $
  */
 
 /**
- * @category   Zend
- * @package    Zend_Oauth2
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ * Chrisweb OAuth 2 Config
  */
-class Zend_Oauth2_Config
+class Chrisweb_Oauth2_Config
 {
 
     /**
-     * The URL root to append default OAuth endpoint paths.
+     * The URL root to preprend when redirecting to the oauth dialog
      *
      * @var string
      */
-    protected $_siteUrl = null;
+    protected $_dialogEndpoint = null;
+    
+    /**
+     * The URL root preprend when doing oauth requests
+     *
+     * @var string
+     */
+    protected $_oauthEndpoint = null;
 
     /**
      * This optional value is used to define where the user is redirected to
@@ -68,6 +63,13 @@ class Zend_Oauth2_Config
      * @var string
      */
     protected $_secretType = null;
+    
+    /**
+     * the grant type
+     *
+     * @var string
+     */
+    protected $_grantType = null;
 
     /**
      *
@@ -87,6 +89,22 @@ class Zend_Oauth2_Config
      * @var string|array
      */
     protected $_requestedRights = null;
+    
+    /**
+     *
+     * facebook oauth 2 dialog url
+     * 
+     * @var string
+     */
+    protected $_dialogUri = null;
+    
+    /**
+     *
+     * facebook get the access token uri
+     * 
+     * @var string
+     */
+    protected $_accessTokenUri = null;
 
     /**
      * Constructor; create a new object with an optional array|Zend_Config
@@ -116,8 +134,11 @@ class Zend_Oauth2_Config
     {
         foreach ($options as $key => $value) {
             switch ($key) {
-                case 'siteUrl':
-                    $this->setSiteUrl($value);
+                case 'dialogEndpoint':
+                    $this->setDialogEndpoint($value);
+                    break;
+                case 'oauthEndpoint':
+                    $this->setOauthEndpoint($value);
                     break;
                 case 'callbackUrl':
                     $this->setCallbackUrl($value);
@@ -134,6 +155,9 @@ class Zend_Oauth2_Config
                 case 'secretType':
                     $this->setSecretType($value);
                     break;
+                case 'grantType':
+                    $this->setGrantType($value);
+                    break;
                 case 'state':
                     $this->setState($value);
                     break;
@@ -143,6 +167,12 @@ class Zend_Oauth2_Config
                 case 'requestedRights':
                     $this->setRequestedRights($value);
                     break;
+                case 'oauthDialogUri':
+                    $this->setDialogUri($value);
+                    break;
+                case 'accessTokenUri':
+                    $this->setAccessTokenUri($value);
+                    break;
             }
         }
 
@@ -150,25 +180,47 @@ class Zend_Oauth2_Config
     }
 
     /**
-     * Set site url
+     * Set dialog url
      *
      * @param  string $key
      * @return Zend_Oauth2_Config
      */
-    public function setSiteUrl($siteUrl)
+    public function setDialogEndpoint($dialogEndpoint)
     {
-        $this->_siteUrl = $siteUrl;
+        $this->_dialogEndpoint = $dialogEndpoint;
         return $this;
     }
 
     /**
-     * Get site url
+     * Get dialog url
      *
      * @return string
      */
-    public function getSiteUrl()
+    public function getDialogEndpoint()
     {
-        return $this->_siteUrl;
+        return $this->_dialogEndpoint;
+    }
+    
+    /**
+     * Set oauth url
+     *
+     * @param  string $key
+     * @return Zend_Oauth2_Config
+     */
+    public function setOauthEndpoint($oauthEndpoint)
+    {
+        $this->_oauthEndpoint = $oauthEndpoint;
+        return $this;
+    }
+
+    /**
+     * Get oauth url
+     *
+     * @return string
+     */
+    public function getOauthEndpoint()
+    {
+        return $this->_oauthEndpoint;
     }
 
     /**
@@ -280,6 +332,29 @@ class Zend_Oauth2_Config
     {
         return $this->_secretType;
     }
+    
+    /**
+     * 
+     * Set grant type
+     * 
+     * @param string $grantType
+     * @return \Chrisweb_Oauth2_Config
+     */
+    public function setGrantType($grantType)
+    {
+        $this->_grantType = $grantType;
+        return $this;
+    }
+
+    /**
+     * Get secret type
+     *
+     * @return string
+     */
+    public function getGrantType()
+    {
+        return $this->_grantType;
+    }
 
     /**
      * Set state
@@ -345,6 +420,54 @@ class Zend_Oauth2_Config
     public function getRequestedRights()
     {
         return $this->_requestedRights;
+    }
+    
+    /**
+     * 
+     * Set the facebook dialog uri
+     * 
+     * @param string $accessTokenUri
+     * @return \Chrisweb_Oauth2_Config
+     */
+    public function setDialogUri($oauthDialogUri)
+    {
+        $this->_dialogUri = $oauthDialogUri;
+        return $this;
+    }
+    
+    /**
+     * 
+     * Get the facebook dialog uri
+     * 
+     * @return string
+     */
+    public function getDialogUri()
+    {
+        return $this->_dialogUri;
+    }
+    
+    /**
+     * 
+     * Set the facebook access token uri
+     * 
+     * @param string $accessTokenUri
+     * @return \Chrisweb_Oauth2_Config
+     */
+    public function setAccessTokenUri($accessTokenUri)
+    {
+        $this->_accessTokenUri = $accessTokenUri;
+        return $this;
+    }
+    
+    /**
+     * 
+     * Get the facebook access token uri
+     * 
+     * @return string
+     */
+    public function getAccessTokenUri()
+    {
+        return $this->_accessTokenUri;
     }
 
 }

@@ -1,29 +1,19 @@
 <?php
 
 /**
- * Zend Framework
+ * Chrisweb OAuth 2 for Zend Framework 1
  *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://framework.zend.com/license/new-bsd
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@zend.com so we can send you a copy immediately.
  *
- * @category   Zend
- * @package    Zend_Oauth2
- * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
- * @license    http://framework.zend.com/license/new-bsd     New BSD License
- * @version    $Id: Oauth.php 21071 2010-02-16 14:35:00Z padraic $
  */
 
 /**
- * @see Zend_Oauth2_Config
+ * @see Chrisweb_Oauth2_Config
  */
-require_once 'Zend/Oauth2/Config.php';
+require_once 'Chrisweb/Oauth2/Config.php';
 
 /**
  * @see Zend_Rest_Client
@@ -35,11 +25,11 @@ require_once 'Zend/Rest/Client.php';
  */
 require_once 'Zend/Json.php';
 
-class Zend_Oauth2
+/**
+ * Chrisweb OAuth 2
+ */
+class Chrisweb_Oauth2
 {
-
-    const authentification_uri = '/authorize';
-    const access_token_uri = '/access_token';
 
     /**
      *
@@ -61,7 +51,7 @@ class Zend_Oauth2
 
     public function __construct($options = null)
     {
-        $this->_config = new Zend_Oauth2_Config;
+        $this->_config = new Chrisweb_Oauth2_Config();
         if (!is_null($options)) {
             if ($options instanceof Zend_Config) {
                 $options = $options->toArray();
@@ -71,10 +61,10 @@ class Zend_Oauth2
     }
 
     /**
-     *
+     * 
      * redirecting the end user's user-agent to the authorization page
      *
-     * adter accepting or denying user will be redirected to callback page
+     * after accepting or denying user will be redirected to callback page
      * if user accepts url will include a parameter "code" and optional a parameter "state"
      * if user denies url will include a parameter "error" set to "user_denied"
      * and an optional parameter "state"
@@ -99,32 +89,35 @@ class Zend_Oauth2
      * check or if it is unable to establish the end user's identity or approval
      * status, it MUST deny the request without prompting the end user. Defaults
      * to "false" if omitted.)
-     *
-     * @param <type> $siteUrl
-     * @param <type> $callbackUrl
-     * @param <type> $clientId
-     * @param <type> $type
-     * @param <type> $state
-     * @param <type> $immediate
-     * @param <type> $requestedRights
+     * 
+     * @param string $dialogEndpoint
+     * @param string $callbackUrl
+     * @param string $clientId
+     * @param string $type
+     * @param string $state
+     * @param string $immediate
+     * @param string $requestedRights
+     * @param string $dialogUri
+     * @throws Chrisweb_Oauth2_Exception
      */
-    public function authorizationRedirect($siteUrl = null, $callbackUrl = null, $clientId = null, $type = null, $state = null, $immediate = null, $requestedRights = null)
+    public function authorizationRedirect($dialogEndpoint = null, $callbackUrl = null, $clientId = null, $type = null, $state = null, $immediate = null, $requestedRights = null, $dialogUri = null)
     {
-        if (is_null($siteUrl)) $siteUrl = $this->_config->getSiteUrl();
+        if (is_null($dialogEndpoint)) $dialogEndpoint = $this->_config->getDialogEndpoint();
         if (is_null($callbackUrl)) $callbackUrl = $this->_config->getCallbackUrl();
         if (is_null($clientId)) $clientId = $this->_config->getClientId();
         if (is_null($type)) $type = $this->_config->getType();
         if (is_null($state)) $state = $this->_config->getState();
         if (is_null($immediate)) $immediate = $this->_config->getImmediate();
         if (is_null($requestedRights)) $requestedRights = $this->_config->getRequestedRights();
+        if (is_null($dialogUri)) $dialogUri = $this->_config->getDialogUri();
 
-        $requiredValuesArray = array('siteUrl', 'callbackUrl', 'clientId', 'type');
+        $requiredValuesArray = array('dialogEndpoint', 'callbackUrl', 'clientId', 'dialogUri');
 
         // throw exception if one of the required values is missing
         foreach($requiredValuesArray as $requiredValue) {
             if (is_null($$requiredValue)) {
-                require_once 'Zend/Oauth2/Exception.php';
-                throw new Zend_Oauth2_Exception('value '. $requiredValue.' is empty, pass '.ucfirst($requiredValue).' as parameter when calling the '.__METHOD__.' method or add it to the options array you pass when creating an instance of the '.get_class($this).' class');
+                require_once 'Chrisweb/Oauth2/Exception.php';
+                throw new Chrisweb_Oauth2_Exception('value '. $requiredValue.' is empty, pass '.ucfirst($requiredValue).' as parameter when calling the '.__METHOD__.' method or add it to the options array you pass when creating an instance of the '.get_class($this).' class');
             }
         }
 
@@ -138,13 +131,11 @@ class Zend_Oauth2
         }
 
         // construct request url with required values
-        if (substr($siteUrl, -1) == '/') $siteUrl = substr($siteUrl, 0, strlen($siteUrl)-1);
-        $requestUrl = $siteUrl.self::authentification_uri.'?client_id='.$clientId.'&redirect_uri='.$callbackUrl.'&type='.$type;
-
-        //Zend_Debug::dump($requestUrl);
-        //exit;
+        if (substr($dialogEndpoint, -1) == '/') $dialogEndpoint = substr($dialogEndpoint, 0, strlen($dialogEndpoint)-1);
+        $requestUrl = $dialogEndpoint.$dialogUri.'?client_id='.$clientId.'&redirect_uri='.$callbackUrl;
 
         // add optional values to request url
+        if (!empty($scope)) $requestUrl .= '&type='.$type;
         if (!empty($scope)) $requestUrl .= '&scope='.$scope;
         if (!empty($state)) $requestUrl .= '&state='.$state;
         if (!empty($immediate)) $requestUrl .= '&immediate='.$immediate;
@@ -201,7 +192,7 @@ class Zend_Oauth2
      * Set verification code
      *
      * @param  string $verificationCode
-     * @return Zend_Oauth2
+     * @return Chrisweb_Oauth2
      */
     public function setVerificationCode($verificationCode)
     {
@@ -256,7 +247,7 @@ class Zend_Oauth2
     }
     
     /**
-     *
+     * 
      * requests an access token from the authorization server
      * 
      * The client obtains an access token from the authorization server by
@@ -278,59 +269,85 @@ class Zend_Oauth2
      * server will issue a bearer token (an access token without a matching secret))
      * 
      * @param string $verificationCode
-     * @return string
+     * @param string $oauthEndpoint
+     * @param string $callbackUrl
+     * @param string $clientId
+     * @param string $clientSecret
+     * @param string $type
+     * @param string $secretTtype
+     * @param string $accessTokenUri
+     * @return array
+     * @throws Chrisweb_Oauth2_Exception
      */
-    public function requestAccessToken($verificationCode = null, $siteUrl = null, $callbackUrl = null, $clientId = null, $clientSecret = null, $type = null, $secretTtype = null)
+    public function requestAccessToken($verificationCode = null, $oauthEndpoint = null, $callbackUrl = null, $clientId = null, $clientSecret = null, $type = null, $secretType = null, $grantType = null, $accessTokenUri = null)
     {
         if (is_null($verificationCode)) $verificationCode = $this->getVerificationCode();
-        if (is_null($siteUrl)) $siteUrl = $this->_config->getSiteUrl();
+        if (is_null($oauthEndpoint)) $oauthEndpoint = $this->_config->getOauthEndpoint();
         if (is_null($callbackUrl)) $callbackUrl = $this->_config->getCallbackUrl();
         if (is_null($clientId)) $clientId = $this->_config->getClientId();
         if (is_null($clientSecret)) $clientSecret = $this->_config->getClientSecret();
         if (is_null($type)) $type = $this->_config->getType();
-        if (is_null($secretTtype)) $secretTtype = $this->_config->getSecretType();
+        if (is_null($secretType)) $secretType = $this->_config->getSecretType();
+        if (is_null($grantType)) $grantType = $this->_config->getGrantType();
         if (is_null(self::$_localHttpClient)) $this->setLocalHttpClient($this->getLocalHttpClient());
+        if (is_null($accessTokenUri)) $accessTokenUri = $this->_config->getAccessTokenUri();
 
-        $requiredValuesArray = array('verificationCode', 'type', 'clientId', 'clientSecret', 'callbackUrl');
+        $requiredValuesArray = array('verificationCode', 'type', 'clientId', 'clientSecret', 'callbackUrl', 'accessTokenUri', 'oauthEndpoint');
 
         // throw exception if one of the required values is missing
         foreach($requiredValuesArray as $requiredValue) {
-            if (is_null($$requiredValue)) {
-                require_once 'Zend/Oauth2/Exception.php';
-                throw new Zend_Oauth2_Exception('value '. $requiredValue.' is empty, pass the '.ucfirst($requiredValue).' as parameter when calling the '.__METHOD__.' method or add it to the options array you pass when creating an instance of the '.get_class($this).' class');
+            if (is_null($requiredValue)) {
+                require_once 'Chrisweb/Oauth2/Exception.php';
+                throw new Chrisweb_Oauth2_Exception('value '. $requiredValue.' is empty, pass the '.ucfirst($requiredValue).' as parameter when calling the '.__METHOD__.' method or add it to the options array you pass when creating an instance of the '.get_class($this).' class');
             }
         }
 
-        if (substr($siteUrl, -1) == '/') $siteUrl = substr($siteUrl, 0, strlen($siteUrl)-1);
+        if (substr($oauthEndpoint, -1) == '/') $oauthEndpoint = substr($oauthEndpoint, 0, strlen($oauthEndpoint)-1);
+        
+        $postParametersArray = array(
+            'client_id'   => $clientId,
+            'client_secret' => $clientSecret,
+            'code' => $verificationCode,
+            'redirect_uri' => $callbackUrl
+        );
+        
+        if (!empty($type) && !is_null($type)) {
+            
+            $postParametersArray['type'] = $type;
+            
+        }
+        
+        if (!empty($secretType) && !is_null($secretType)) {
+            
+            $postParametersArray['secret_type'] = $secretType;
+            
+        }
+        
+        if (!empty($grantType) && !is_null($grantType)) {
+            
+            $postParametersArray['grant_type'] = $grantType;
+            
+        }
 
         self::$_localHttpClient ->resetParameters()
                                 ->setHeaders('Accept-Charset', 'ISO-8859-1,utf-8')
-                                ->setUri($siteUrl.self::access_token_uri)
-                                ->setParameterPost(array(
-                                    'type'  => $type,
-                                    'client_id'   => $clientId,
-                                    'client_secret' => $clientSecret,
-                                    'code' => $verificationCode,
-                                    'redirect_uri' => $callbackUrl,
-                                    'secret_type' => $secretTtype
-                                ));
+                                ->setUri($oauthEndpoint.$accessTokenUri)
+                                ->setParameterPost($postParametersArray);
 
         //Zend_Debug::dump(self::$_localHttpClient->getUri());
         //exit;
 
         $response = self::$_localHttpClient->request('POST');
 
-        //Zend_Debug::dump($body, 'body');
-        //Zend_Debug::dump($status, 'status');
-        //exit;
-
         if (!is_null($response)) {
+            
             $body   = $response->getBody();
             $status = $response->getStatus();
+            
         } else {
 
-            require_once 'Zend/Oauth2/Exception.php';
-            throw new Zend_Oauth2_Exception('the response we recieved is emtpy');
+            require_once 'Chrisweb/Oauth2/Exception.php';
+            throw new Chrisweb_Oauth2_Exception('the response we recieved is emtpy');
 
         }
 
@@ -338,23 +355,91 @@ class Zend_Oauth2
         //exit;
 
         if ($status != '200') {
-
+            
             $errorArray = Zend_Json::decode($body);
-            require_once 'Zend/Oauth2/Exception.php';
-            throw new Zend_Oauth2_Exception('we recieved an error ('.$status.') as response: '.$errorArray['error']['type'].' => '.$errorArray['error']['message']);
+            
+            //Zend_Debug::dump($errorArray);
+            //exit;
+            
+            $errorMessage = '';
+            
+            $errorMessage .= 'we recieved an error ('.$status.') as response';
+            
+            if (array_key_exists('error', $errorArray)) {
+                
+                if (is_array($errorArray['error'])) {
+                
+                    foreach($errorArray['error'] as $errorKey => $errorValue) {
+
+                        $errorMessage .= ', '.$errorKey.': '.$errorValue; 
+
+                    }
+                    
+                } else if (is_string($errorArray['error'])) {
+                    
+                    $errorMessage .= ', error message: '.$errorArray['error'];
+                    
+                }
+                
+            }
+            
+            if (array_key_exists('error_description', $errorArray)) {
+                
+                $errorMessage .= ', description: '.$errorArray['error_description'];
+
+            }
+            
+            
+            if (array_key_exists('error_uri', $errorArray)) {
+                
+                $errorMessage .= ', error uri: '.$errorArray['error_uri'];
+
+            }
+
+            require_once 'Chrisweb/Oauth2/Exception.php';
+            throw new Chrisweb_Oauth2_Exception($errorMessage);
+
+        } else {
+            
+            $oauthResponse = array();
+            
+            // is it a json string or just a string
+            try {
+            
+                $oauthResponse = Zend_Json::decode($body);
+
+            } catch (Exception $e) {
+
+                // not a json string
+                $explodedBody = explode('&', $body);
+
+                //Zend_Debug::dump($explodedBody, '$explodedBody');
+                //exit;
+
+                if (count($explodedBody) > 1) {
+
+                    foreach($explodedBody as $explodedBodyPart) {
+
+                        $responseParts = explode('=', $explodedBodyPart);
+
+                        switch ($responseParts[0]) {
+                            case 'access_token':
+                                $oauthResponse['access_token'] = $responseParts[1];
+                                break;
+                            case 'expires':
+                                $oauthResponse['expires'] = $responseParts[1];
+                                break;
+                        }
+
+                    }
+
+                }
+
+            }
 
         }
 
-        $explodedBody = explode('=', $body);
-
-        if ($explodedBody[0] != 'access_token') {
-
-            require_once 'Zend/Oauth2/Exception.php';
-            throw new Zend_Oauth2_Exception('WTF?');
-
-        }
-        
-        return $explodedBody[1];
+        return $oauthResponse;
         
     }
 
