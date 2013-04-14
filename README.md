@@ -13,9 +13,9 @@ Zend Framework 1 OAuth 2 examples.
 Jamendo API OAuth 2
 -------------------
 
-1. Add the latest Zend Framework and the Chrisweb library to the library directory.
+1) Add the latest Zend Framework and the Chrisweb library to the library directory.
 
-2. Setup an Apache vhost for the example:
+2) Setup an Apache vhost for the example:
 
 apache vhost.conf
 
@@ -38,11 +38,11 @@ apache vhost.conf
 </VirtualHost>
 ```
 
-3. Update your hosts file:
+3) Update your hosts file:
 
 127.0.0.1 www.jamendoapioauth2.dev
 
-4. Create a Jamendi API account, then create a configuration file and add the values:
+4) Create a Jamendi API account, then create a configuration file and add the values:
 
 ```
 ; application/configs/jamendo_api.ini
@@ -64,9 +64,9 @@ grantType = authorization_code
 Facebook Open Graph API OAuth 2
 -------------------------------
 
-1. Add the latest Zend Framework and the Chrisweb library to the library directory.
+1) Add the latest Zend Framework and the Chrisweb library to the library directory.
 
-2. Setup an Apache vhost for the example:
+2) Setup an Apache vhost for the example:
 
 apache vhost.conf
 
@@ -89,11 +89,11 @@ apache vhost.conf
 </VirtualHost>
 ```
 
-3. Update your hosts file:
+3) Update your hosts file:
 
 127.0.0.1 www.facebookopengraphoauth2.dev
 
-4. Create a Facebook API account, then create a configuration file and add the values:
+4) Create a Facebook API account, then create a configuration file and add the values:
 
 ```
 ; application/configs/facebook_api.ini
