@@ -53,10 +53,7 @@ class IndexController extends Zend_Controller_Action
      */
     public function jamendocallbackAction()
     {
-        
-        //Zend_Debug::dump($_GET['code']);
-        //Zend_Debug::dump($_GET['error_reason']);
-        
+
         $rawCode = $this->_request->getParam('code', null);
         $stateParameter = $this->_request->getParam('state', null);
         $errorReason = $this->_request->getParam('error_reason', null);

@@ -69,7 +69,7 @@ class Chrisweb_Oauth2
      * if user denies url will include a parameter "error" set to "user_denied"
      * and an optional parameter "state"
      *
-     * - type REQUIRED (The type of user delegation authorization flow)
+     * - response_type REQUIRED (The type of user delegation authorization flow)
      *
      * - client_id REQUIRED (The client identifier)
      *
@@ -100,12 +100,12 @@ class Chrisweb_Oauth2
      * @param string $dialogUri
      * @throws Chrisweb_Oauth2_Exception
      */
-    public function authorizationRedirect($dialogEndpoint = null, $callbackUrl = null, $clientId = null, $type = null, $state = null, $immediate = null, $requestedRights = null, $dialogUri = null)
+    public function authorizationRedirect($dialogEndpoint = null, $callbackUrl = null, $clientId = null, $responseType = null, $state = null, $immediate = null, $requestedRights = null, $dialogUri = null)
     {
         if (is_null($dialogEndpoint)) $dialogEndpoint = $this->_config->getDialogEndpoint();
         if (is_null($callbackUrl)) $callbackUrl = $this->_config->getCallbackUrl();
         if (is_null($clientId)) $clientId = $this->_config->getClientId();
-        if (is_null($type)) $type = $this->_config->getType();
+        if (is_null($responseType)) $responseType = $this->_config->getResponseType();
         if (is_null($state)) $state = $this->_config->getState();
         if (is_null($immediate)) $immediate = $this->_config->getImmediate();
         if (is_null($requestedRights)) $requestedRights = $this->_config->getRequestedRights();
@@ -135,7 +135,7 @@ class Chrisweb_Oauth2
         $requestUrl = $dialogEndpoint.$dialogUri.'?client_id='.$clientId.'&redirect_uri='.$callbackUrl;
 
         // add optional values to request url
-        if (!empty($scope)) $requestUrl .= '&type='.$type;
+        if (!empty($responseType)) $requestUrl .= '&response_type='.$responseType;
         if (!empty($scope)) $requestUrl .= '&scope='.$scope;
         if (!empty($state)) $requestUrl .= '&state='.$state;
         if (!empty($immediate)) $requestUrl .= '&immediate='.$immediate;
@@ -279,24 +279,22 @@ class Chrisweb_Oauth2
      * @return array
      * @throws Chrisweb_Oauth2_Exception
      */
-    public function requestAccessToken($verificationCode = null, $oauthEndpoint = null, $callbackUrl = null, $clientId = null, $clientSecret = null, $type = null, $secretType = null, $grantType = null, $accessTokenUri = null)
+    public function requestAccessToken($verificationCode = null, $oauthEndpoint = null, $callbackUrl = null, $clientId = null, $clientSecret = null, $grantType = null, $accessTokenUri = null)
     {
         if (is_null($verificationCode)) $verificationCode = $this->getVerificationCode();
         if (is_null($oauthEndpoint)) $oauthEndpoint = $this->_config->getOauthEndpoint();
         if (is_null($callbackUrl)) $callbackUrl = $this->_config->getCallbackUrl();
         if (is_null($clientId)) $clientId = $this->_config->getClientId();
         if (is_null($clientSecret)) $clientSecret = $this->_config->getClientSecret();
-        if (is_null($type)) $type = $this->_config->getType();
-        if (is_null($secretType)) $secretType = $this->_config->getSecretType();
         if (is_null($grantType)) $grantType = $this->_config->getGrantType();
         if (is_null(self::$_localHttpClient)) $this->setLocalHttpClient($this->getLocalHttpClient());
         if (is_null($accessTokenUri)) $accessTokenUri = $this->_config->getAccessTokenUri();
 
-        $requiredValuesArray = array('verificationCode', 'type', 'clientId', 'clientSecret', 'callbackUrl', 'accessTokenUri', 'oauthEndpoint');
+        $requiredValuesArray = array('verificationCode', 'clientId', 'clientSecret', 'callbackUrl', 'accessTokenUri', 'oauthEndpoint');
 
         // throw exception if one of the required values is missing
         foreach($requiredValuesArray as $requiredValue) {
-            if (is_null($requiredValue)) {
+            if (is_null($$requiredValue)) {
                 require_once 'Chrisweb/Oauth2/Exception.php';
                 throw new Chrisweb_Oauth2_Exception('value '. $requiredValue.' is empty, pass the '.ucfirst($requiredValue).' as parameter when calling the '.__METHOD__.' method or add it to the options array you pass when creating an instance of the '.get_class($this).' class');
             }
@@ -310,23 +308,9 @@ class Chrisweb_Oauth2
             'code' => $verificationCode,
             'redirect_uri' => $callbackUrl
         );
-        
-        if (!empty($type) && !is_null($type)) {
-            
-            $postParametersArray['type'] = $type;
-            
-        }
-        
-        if (!empty($secretType) && !is_null($secretType)) {
-            
-            $postParametersArray['secret_type'] = $secretType;
-            
-        }
-        
+
         if (!empty($grantType) && !is_null($grantType)) {
-            
             $postParametersArray['grant_type'] = $grantType;
-            
         }
 
         self::$_localHttpClient ->resetParameters()

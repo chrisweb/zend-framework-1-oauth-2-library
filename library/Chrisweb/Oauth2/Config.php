@@ -55,14 +55,7 @@ class Chrisweb_Oauth2_Config
      *
      * @var string
      */
-    protected $_type = 'web_server';
-
-    /**
-     * the secret type
-     *
-     * @var string
-     */
-    protected $_secretType = null;
+    protected $_responseType = 'web_server';
     
     /**
      * the grant type
@@ -92,7 +85,7 @@ class Chrisweb_Oauth2_Config
     
     /**
      *
-     * facebook oauth 2 dialog url
+     * oauth 2 dialog url
      * 
      * @var string
      */
@@ -100,7 +93,7 @@ class Chrisweb_Oauth2_Config
     
     /**
      *
-     * facebook get the access token uri
+     * get the access token uri
      * 
      * @var string
      */
@@ -149,11 +142,8 @@ class Chrisweb_Oauth2_Config
                 case 'clientSecret':
                     $this->setClientSecret($value);
                     break;
-                case 'type':
-                    $this->setType($value);
-                    break;
-                case 'secretType':
-                    $this->setSecretType($value);
+                case 'responseType':
+                    $this->setResponseType($value);
                     break;
                 case 'grantType':
                     $this->setGrantType($value);
@@ -290,47 +280,25 @@ class Chrisweb_Oauth2_Config
     }
 
     /**
-     * Set type
+     * Set response type
      *
      * @param  array rights
      * @return Zend_Oauth2_Config
      */
-    public function setType($type)
+    public function setResponseType($responseType)
     {
-        $this->_type = $type;
+        $this->_responseType = $responseType;
         return $this;
     }
 
     /**
-     * Get type
+     * Get response type
      *
      * @return string
      */
-    public function getType()
+    public function getResponseType()
     {
-        return $this->_type;
-    }
-
-    /**
-     * Set secret type
-     *
-     * @param  array rights
-     * @return Zend_Oauth2_Config
-     */
-    public function setSecretType($secretType)
-    {
-        $this->_secretType = $secretType;
-        return $this;
-    }
-
-    /**
-     * Get secret type
-     *
-     * @return string
-     */
-    public function getSecretType()
-    {
-        return $this->_secretType;
+        return $this->_responseType;
     }
     
     /**
@@ -424,7 +392,7 @@ class Chrisweb_Oauth2_Config
     
     /**
      * 
-     * Set the facebook dialog uri
+     * Set the dialog uri
      * 
      * @param string $accessTokenUri
      * @return \Chrisweb_Oauth2_Config
@@ -437,7 +405,7 @@ class Chrisweb_Oauth2_Config
     
     /**
      * 
-     * Get the facebook dialog uri
+     * Get the dialog uri
      * 
      * @return string
      */
@@ -448,7 +416,7 @@ class Chrisweb_Oauth2_Config
     
     /**
      * 
-     * Set the facebook access token uri
+     * Set the access token uri
      * 
      * @param string $accessTokenUri
      * @return \Chrisweb_Oauth2_Config
@@ -461,7 +429,7 @@ class Chrisweb_Oauth2_Config
     
     /**
      * 
-     * Get the facebook access token uri
+     * Get the access token uri
      * 
      * @return string
      */

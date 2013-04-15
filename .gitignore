@@ -1,4 +1,6 @@
 /examples/FacebookOpenGraphOAuth2/nbproject/
 /examples/JamendoApiOAuth2/nbproject/
+/examples/GooglePlusOAuth2/nbproject/
 /examples/FacebookOpenGraphOAuth2/application/configs/facebook_api.ini
 /examples/JamendoApiOAuth2/application/configs/jamendo_api.ini
+/examples/GooglePlusOAuth2/application/configs/google_plus_api.ini
