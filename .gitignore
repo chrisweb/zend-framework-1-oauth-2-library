@@ -4,3 +4,4 @@
 /examples/FacebookOpenGraphOAuth2/application/configs/facebook_api.ini
 /examples/JamendoApiOAuth2/application/configs/jamendo_api.ini
 /examples/GooglePlusOAuth2/application/configs/google_plus_api.ini
+/nbproject/private/
