@@ -3,7 +3,7 @@ About:
 
 Zend Framework 1 OAuth 2 Library
 
-version 1.1.1
+version 1.1.2
 
 Examples:
 =========
@@ -190,3 +190,8 @@ grantType = authorization_code
 requestedRights = music ; = scope
 responseType = code ; = response_type
 ```
+
+OAuth 2.0 protocol specification:
+=================================
+
+http://oauth.net/2/
