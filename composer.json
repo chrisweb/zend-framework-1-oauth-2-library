@@ -17,8 +17,8 @@
         "php": ">=5.2.11"
     },
     "autoload": {
-        "psr-4": {
-            "Chrisweb\\": "src/"
+        "psr-0": {
+            "Chrisweb": "library"
         }
     },
     "authors": [
