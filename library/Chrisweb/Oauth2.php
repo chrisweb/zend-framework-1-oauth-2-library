@@ -130,20 +130,24 @@ class Chrisweb_Oauth2
             $scope = $requestedRights;
         }
 
-        // construct request url with required values
-        if (substr($dialogEndpoint, -1) == '/') $dialogEndpoint = substr($dialogEndpoint, 0, strlen($dialogEndpoint)-1);
-        $requestUrl = $dialogEndpoint.$dialogUri.'?client_id='.$clientId.'&redirect_uri='.$callbackUrl;
+        // construct request url and its parameters with required values
+        if (substr($dialogEndpoint, -1) == '/') $dialogEndpoint = substr($dialogEndpoint, 0, strlen($dialogEndpoint) - 1);
+
+        $baseUrl = $dialogEndpoint . $dialogUri;
+
+        // Build array of parameters
+        $baseUrlParams = array('client_id' => $clientId, 'redirect_uri' => $callbackUrl);
 
         // add optional values to request url
-        if (!empty($responseType)) $requestUrl .= '&response_type='.$responseType;
-        if (!empty($scope)) $requestUrl .= '&scope='.$scope;
-        if (!empty($state)) $requestUrl .= '&state='.$state;
-        if (!empty($immediate)) $requestUrl .= '&immediate='.$immediate;
+        if (!empty($responseType)) $baseUrlParams['response_type'] = $responseType;
+        if (!empty($scope)) $baseUrlParams['scope'] = $scope;
+        if (!empty($state)) $baseUrlParams['state'] = $state;
+        if (!empty($immediate)) $baseUrlParams['immediate'] = $immediate;
 
-        //Zend_Debug::dump($requestUrl);
-        //exit;
+        $baseUrlParams = http_build_query($baseUrlParams, null, '&', PHP_QUERY_RFC3986);
+        $finalUrl = $baseUrl.'?'.$baseUrlParams;
 
-        header('Location: '.$requestUrl);
+        header('Location: ' . $finalUrl);
         exit(1);
 
     }
