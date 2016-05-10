@@ -295,7 +295,7 @@ class Chrisweb_Oauth2
         if (is_null($accessTokenUri)) $accessTokenUri = $this->_config->getAccessTokenUri();
 
         if (empty($grantType)) {
-            $grantType = 'authentication_code';
+            $grantType = 'authorization_code';
         }
 
         $requiredValuesArray = array('clientId', 'clientSecret', 'callbackUrl', 'accessTokenUri', 'oauthEndpoint');
